@@ -16,7 +16,8 @@ LoRa_E32 e32module(&LoRaSerial, LORA_AUX_PIN, LORA_M0_PIN, LORA_M1_PIN, UART_BPS
 Adafruit_BNO08x bno08x;
 sh2_SensorValue_t sensorValue;
 
-const float TILT_THRESHOLD_DEGREES = 15.0; 
+// UPDATED: 45 Degree Cone of Safety
+const float TILT_THRESHOLD_DEGREES = 45.0; 
 
 /* ==============================
    GLOBALS
@@ -27,7 +28,7 @@ unsigned long lastTransmitTime = 0;
 void setup() {
   Serial.begin(115200);
   delay(1000);
-  Serial.println("\n--- TX: BNO085 + LoRa Tilt Tester ---");
+  Serial.println("\n--- TX: BNO085 + LoRa Tilt Tester (45 Deg) ---");
 
   // LoRa Setup
   LoRaSerial.begin(9600, SERIAL_8N1, 16, 17);
@@ -85,10 +86,10 @@ void loop() {
         pitch = asin(sinp) * 180.0 / PI;
 
       // 3. Check against Tilt Threshold
-      // Assuming Z is pointing up through the rocket. If it tilts > 15deg on X or Y axis:
+      // Assuming Z is pointing up through the rocket. If it tilts > 45deg on X or Y axis:
       if (!tiltTriggered && (abs(roll) > TILT_THRESHOLD_DEGREES || abs(pitch) > TILT_THRESHOLD_DEGREES)) {
         tiltTriggered = true;
-        Serial.println("!!! TILT TRIGGERED (>15 DEGREES) !!!");
+        Serial.println("!!! TILT TRIGGERED (>45 DEGREES) !!!");
       }
 
       // 4. Transmit Telemetry at 5Hz (Every 200ms)
