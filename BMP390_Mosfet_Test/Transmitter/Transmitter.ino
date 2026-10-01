@@ -55,6 +55,7 @@ void setup() {
   // Ground Calibration
   Serial.print("Calibrating ground altitude...");
   float sumAlt = 0.0;
+  delay(5000);
   for (int i = 0; i < 10; i++) {
     bmp.performReading();
     sumAlt += bmp.readAltitude(SEALEVELPRESSURE_HPA);
@@ -83,7 +84,7 @@ void loop() {
 
   // Build Telemetry String: "RelativeAltitude,ApogeeSignal"
   // ApogeeSignal is 1 if detected, 0 if not.
-  String telemetryData = String(relAltitude, 2) + "," + String(apogeeDetected ? 1 : 0);
+  String telemetryData = String(relAltitude, 2) + "," + String(apogeeDetected ? 1 : 0)+String(groundAltitudeOffset)+String(altitude);
 
   // Transmit Data
   ResponseStatus resp = e32module.sendMessage(telemetryData);
@@ -93,5 +94,5 @@ void loop() {
     Serial.println("TX Failed");
   }
 
-  delay(200); // 5Hz transmission rate
+  delay(2000); // 5Hz transmission rate
 }
